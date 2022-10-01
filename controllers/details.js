@@ -2,7 +2,10 @@ const dotenv = require('dotenv');
 const axios = require('axios');
 
 const transactions = require('../model/transactions');
+const user = require('../model/user');
+
 dotenv.config();
+
 exports.getTransactions = ((req,res)=> {
     const address = req.query.address;
     const url = `https://api.etherscan.io/api?module=account&action=txlistinternal&address=${address}&startblock=0&endblock=2702578&page=1&offset=10&sort=asc&apikey=${process.env.APIKEY}`;
@@ -10,8 +13,12 @@ exports.getTransactions = ((req,res)=> {
     axios.get(url)
         .then(response => {
             data = response.data.result;
-            console.log(data);
-            res.json({success: true, data});
+            transactions.bulkCreate(data).then(() => {
+                res.json({success: true, masg:"Successfully added to the database", data});
+            }).catch(err => {
+                console.log(err);
+            });
+            // res.json({success: true, data});
         })
         .catch(err => {
             console.log(url+"====="+err);
@@ -31,24 +38,25 @@ exports.getEntheriumPrice = ((req, res) => {
         })
     });
 
-    exports.getUserBalance = ((req, res) => {
+    exports.getUserBalance = ((req, res, next) => {
         const address = req.query.address;
         const url = `https://api.etherscan.io/api?module=account&action=txlistinternal&address=${address}&startblock=0&endblock=2702578&page=1&offset=10&sort=asc&apikey=${process.env.APIKEY}`;
         console.log("================="+url);
         axios.get(url)
             .then((response) =>{
                 const data = response.data.result;
-                let total = 0;
+                let balance = 0;
                 data.forEach(element => {
                     if(element.to == address){
-                        total +=  element.value;
+                        balance +=  element.value;
                     }
                     if(element.from == address){
-                        total -= element.value;
+                        balance -= element.value;
                     }
                 });
-                console.log(data);
-                res.json({success: true, total});
+                user.create({address,balance}).then(()=> {
+                    res.json({success: true ,msg:"Successfully added in database" ,balance});
+                })
             })
             .catch(err => {
                 console.log(err)
