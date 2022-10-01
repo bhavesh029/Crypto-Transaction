@@ -1,12 +1,7 @@
 const express = require("express");
-
-//const fetch = require('node-fetch');
-const axios = require('axios');
 const dotenv = require('dotenv');
-
 const sequelize = require('./Util/db');
-
-const apiRouter = require('./Routes/details');
+const apiRouter = require('./Routes/route');
 const app = express();
 
 dotenv.config();
