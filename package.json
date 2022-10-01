@@ -1,0 +1,24 @@
+{
+  "name": "crypto-transaction-of-a-user.",
+  "version": "1.0.0",
+  "description": "Assignment for kryptoX company",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "bhavesh chouhan",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "node-cron": "^3.0.2",
+    "node-fetch": "^3.2.10",
+    "nodemon": "^2.0.20",
+    "sequelize": "^6.23.2"
+  }
+}
